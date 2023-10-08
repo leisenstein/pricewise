@@ -1,21 +1,22 @@
+import { NextResponse } from "next/server";
+
 import Product from "@/lib/models/product.model";
 import { connectToDB } from "@/lib/mongoose"
 import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
 import { scrapeAmazonProduct } from "@/lib/scraper";
 import { getAveragePrice, getEmailNotifType, getHighestPrice, getLowestPrice } from "@/lib/utils";
-import { NextResponse } from "next/server";
+
 
 export const maxCuration = 300; // 5min
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export async function get() {
+export async function GET(request: Request) {
     try {
         connectToDB();
 
-
         const products = await Product.find({});
-        if(!products) throw new Error("No products found!");
+        if(!products) throw new Error("No products fetched!");
 
         // 1. Scrape latest product details and Update db
         const updatedProducts = await Promise.all(
@@ -37,7 +38,6 @@ export async function get() {
                     lowestPrice: getLowestPrice(updatedPriceHistory),
                     highestPrice: getHighestPrice(updatedPriceHistory),
                     averagePrice: getAveragePrice(updatedPriceHistory),
-    
                 }
     
                 // CREATE NEW PRODUCT object and UPDATE it
@@ -61,15 +61,14 @@ export async function get() {
                 }
 
                 return updatedProduct;
-
             }) // end map
         ); // end Promise
 
         // 3. return Promise
         return NextResponse.json({
-            message: 'Ok', data: updatedProducts
+            message: 'Ok', \data: updatedProducts
         });
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(`Error in GET: ${error}`)
     }
 }
