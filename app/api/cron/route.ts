@@ -7,7 +7,7 @@ import { scrapeAmazonProduct } from "@/lib/scraper";
 import { getAveragePrice, getEmailNotifType, getHighestPrice, getLowestPrice } from "@/lib/utils";
 
 
-export const maxCuration = 300; // 5min
+export const maxDuration = 300; // 5min
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
