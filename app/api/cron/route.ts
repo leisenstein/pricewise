@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 
         // 3. return Promise
         return NextResponse.json({
-            message: 'Ok', \data: updatedProducts
+            message: 'Ok', data: updatedProducts
         });
     } catch (error: any) {
         throw new Error(`Error in GET: ${error}`)
