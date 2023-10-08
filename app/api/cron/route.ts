@@ -5,6 +5,9 @@ import { scrapeAmazonProduct } from "@/lib/scraper";
 import { getAveragePrice, getEmailNotifType, getHighestPrice, getLowestPrice } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
+export const maxCuration = 300; // 5min
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function get() {
     try {
@@ -38,9 +41,8 @@ export async function get() {
                 }
     
                 // CREATE NEW PRODUCT object and UPDATE it
-                const updatedProduct = await Product.findOneAndUpdate({ url: scrapedProduct.url},
+                const updatedProduct = await Product.findOneAndUpdate({ url: product.url},
                     product,
-                    { upsert: true, new: true }
                 );
 
              // 2. CHECK CURRENT PRODUCT'S STATUS & SEND EMAIL ACCORDINGLY
